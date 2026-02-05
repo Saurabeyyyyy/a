@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: #ffdde1;
+            background-image: linear-gradient(0deg, #ffdde1 0%, #ee9ca7 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .card img {
+            max-width: 120px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #d63384;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center; /* Centers them side by side */
+            align-items: center;
+            gap: 20px; /* Adds space between buttons */
+            width: 100%;
+            height: 50px;
+        }
+
+        button {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-yes {
+            background-color: #d63384;
+            color: white;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.4);
+            z-index: 10;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            background-color: #c21c6b;
+        }
+
+        .btn-no {
+            background-color: #e0e0e0;
+            color: #333;
+            z-index: 10;
+            /* Removed absolute positioning so it sits next to YES initially */
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .hidden-message h2 {
+            color: #d63384;
+            margin-bottom: 10px;
+        }
+
+        .emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <img src="huhu.gif" alt="Sad Gif">
+        <h1>I'm So Sorry</h1>
+        
+        <p>
+            Hey <b>[Babeee]</b>,<br><br>
+            I’m truly sorry for hurting you. You mean the world to me, and I never wanted to cause you pain. Please forgive me, I promise to make things right. Can you please forgive me?
+        </p>
+
+        <div class="btn-container">
+            <button class="btn-yes" onclick="forgiveMe()">Yes, I forgive you</button>
+            <button class="btn-no" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
+        </div>
+    </div>
+
+    <div class="card hidden-message" id="successCard">
+        <span class="emoji">💕</span>
+        <h1>Thank You!</h1>
+        <p>I promise to make it up to you. I loveeeee youuuu soooo muchhh ❤️❤️😘😘😘</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.querySelector('.btn-yes');
+
+        // Logic to make the "No" button run away
+        function moveButton() {
+            // Get current dimensions
+            const noBtnRect = noBtn.getBoundingClientRect();
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+
+            // Calculate max screen space
+            const maxX = window.innerWidth - noBtnRect.width - 20;
+            const maxY = window.innerHeight - noBtnRect.height - 20;
+
+            let newX, newY;
+            let isOverlapping = true;
+            let attempts = 0;
+
+            // Try to find a spot that doesn't overlap
+            while (isOverlapping && attempts < 100) {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+
+                // Ensure positive coordinates
+                newX = Math.max(10, newX);
+                newY = Math.max(10, newY);
+
+                // Define area of new "No" button
+                const noLeft = newX;
+                const noRight = newX + noBtnRect.width;
+                const noTop = newY;
+                const noBottom = newY + noBtnRect.height;
+
+                // Define area of "Yes" button with buffer
+                const buffer = 30; // Increased buffer for extra safety
+                const yesLeft = yesBtnRect.left - buffer;
+                const yesRight = yesBtnRect.right + buffer;
+                const yesTop = yesBtnRect.top - buffer;
+                const yesBottom = yesBtnRect.bottom + buffer;
+
+                // Check overlap
+                if (noRight < yesLeft || noLeft > yesRight || noBottom < yesTop || noTop > yesBottom) {
+                    isOverlapping = false;
+                }
+                attempts++;
+            }
+
+            // Apply new position
+            // Important: We switch to 'fixed' only when moving
+            noBtn.style.position = 'fixed'; 
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+        }
+
+        // Logic for "Yes" click
+        function forgiveMe() {
+            document.getElementById('mainCard').style.display = 'none';
+            const successCard = document.getElementById('successCard');
+            successCard.style.display = 'block';
+            successCard.style.animation = "fadeIn 1s ease";
+
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInOut(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInOut(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInOut(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+        
+        // Touch support for mobile
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveButton();
+        });
+
+    </script>
+</body>
+</html>
